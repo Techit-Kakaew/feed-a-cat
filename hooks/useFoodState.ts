@@ -15,7 +15,6 @@ export function useFoodState(
 
   useEffect(() => {
     // Subscribe to real-time changes on the global_food_state table
-    console.log("Initializing Supabase Realtime subscription...");
 
     const channel = supabase
       .channel("food_state_updates")
@@ -27,21 +26,18 @@ export function useFoodState(
           table: "global_food_state",
         },
         (payload) => {
-          console.log("Realtime update received 📡:", payload);
           if (payload.new) {
             queryClient.setQueryData(["foodState"], payload.new);
           }
         },
       )
       .subscribe((status) => {
-        console.log(`Supabase Subscription Status: ${status}`);
         if (status === "CHANNEL_ERROR") {
           console.error("Realtime channel error - checking connection/RLS");
         }
       });
 
     return () => {
-      console.log("Cleaning up Supabase Realtime subscription");
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
