@@ -39,9 +39,16 @@ interface Particle {
 interface FoodBowlProps {
   onAddFood: () => void;
   foodAmount: number;
+  queueSize?: number;
+  lastFedAmount?: number;
 }
 
-export default function FoodBowl({ onAddFood, foodAmount }: FoodBowlProps) {
+export default function FoodBowl({
+  onAddFood,
+  foodAmount,
+  queueSize = 0,
+  lastFedAmount = 0,
+}: FoodBowlProps) {
   const [particles, setParticles] = useState<Particle[]>([]);
 
   const handlePress = useCallback(() => {
@@ -144,8 +151,60 @@ export default function FoodBowl({ onAddFood, foodAmount }: FoodBowlProps) {
         </motion.button>
       </div>
 
-      <div className="text-white/80 text-[8px] md:text-xs font-black uppercase tracking-[0.2em] text-center max-w-xs drop-shadow-md">
-        Tap to refill bowl
+      <div className="flex flex-col items-center gap-2">
+        <div className="text-white/80 text-[8px] md:text-xs font-black uppercase tracking-[0.2em] text-center max-w-xs drop-shadow-md">
+          Tap to refill bowl
+        </div>
+
+        {/* Feedback Messages (Absolute Context to avoid layout shift) */}
+        <div className="relative h-6 w-full flex justify-center">
+          <AnimatePresence mode="wait">
+            {queueSize > 0 ? (
+              <motion.div
+                key="queue"
+                initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.95,
+                  transition: { duration: 0.2 },
+                }}
+                className="absolute top-0 flex items-center gap-2 bg-yellow-400/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-yellow-400/20 shadow-lg shadow-yellow-400/5"
+              >
+                <motion.div
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.5, 1, 0.5],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 1.5,
+                  }}
+                  className="w-2 h-2 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(250,204,21,0.6)]"
+                />
+                <span className="text-[10px] md:text-xs font-black text-yellow-400 uppercase tracking-wider whitespace-nowrap">
+                  Coming right up! {queueSize} servings queued
+                </span>
+              </motion.div>
+            ) : lastFedAmount > 0 ? (
+              <motion.div
+                key="success"
+                initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.95,
+                  transition: { duration: 0.2 },
+                }}
+                className="absolute top-0 flex items-center gap-2 bg-green-400/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-green-400/20 shadow-lg shadow-green-400/5"
+              >
+                <span className="text-[10px] md:text-xs font-black text-green-400 uppercase tracking-wider whitespace-nowrap">
+                  Delivered {lastFedAmount} servings! 🥣
+                </span>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

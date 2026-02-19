@@ -21,6 +21,8 @@ export default function Home() {
   const globalFoodAmount = foodState?.food_amount ?? 0;
   const [catState, setCatState] = useState<CatState>("HUNGRY");
   const [mounted, setMounted] = useState(false);
+  const [queueSize, setQueueSize] = useState(0);
+  const [lastFedAmount, setLastFedAmount] = useState(0);
 
   useEffect(() => {
     // Break the synchronous render chain to satisfy ESLint
@@ -76,6 +78,7 @@ export default function Home() {
 
     // Increment pending clicks
     pendingClicks.current += 1;
+    setQueueSize(pendingClicks.current);
 
     // Update local score for immediate feedback
     addFoodAndScore(FOOD_CONFIG.FOOD_PER_CLICK);
@@ -87,12 +90,25 @@ export default function Home() {
       pendingClicks.current = 0;
       sessionStartTime.current = Date.now(); // Reset session timer for next batch
 
-      feedMutation.mutate({
-        guestId,
-        countryCode: country.code,
-        countryName: country.name,
-        count: clicksToSend,
-      });
+      feedMutation.mutate(
+        {
+          guestId,
+          countryCode: country.code,
+          countryName: country.name,
+          count: clicksToSend,
+        },
+        {
+          onSuccess: (_, variables) => {
+            setLastFedAmount(variables.count);
+            // Clear the "Delivered" message after 3 seconds
+            setTimeout(() => setLastFedAmount(0), 3000);
+          },
+          onSettled: () => {
+            // Only clear queue if we're not middle of another batch
+            setQueueSize(pendingClicks.current);
+          },
+        },
+      );
     }
 
     // Clear existing timer for idle check
@@ -107,12 +123,23 @@ export default function Home() {
       sessionStartTime.current = 0; // Reset session tracking
 
       if (clicksToSend > 0) {
-        feedMutation.mutate({
-          guestId,
-          countryCode: country.code,
-          countryName: country.name,
-          count: clicksToSend,
-        });
+        feedMutation.mutate(
+          {
+            guestId,
+            countryCode: country.code,
+            countryName: country.name,
+            count: clicksToSend,
+          },
+          {
+            onSuccess: (_, variables) => {
+              setLastFedAmount(variables.count);
+              setTimeout(() => setLastFedAmount(0), 3000);
+            },
+            onSettled: () => {
+              setQueueSize(pendingClicks.current);
+            },
+          },
+        );
       }
     }, 2000); // Wait 2s after last click
   }, [guestId, country, addFoodAndScore, feedMutation]);
@@ -183,7 +210,12 @@ export default function Home() {
 
         {/* Food Bowl (Interactive) */}
         <div className="scale-95 md:scale-110 flex items-center justify-center transition-transform">
-          <FoodBowl onAddFood={handleBowlClick} foodAmount={globalFoodAmount} />
+          <FoodBowl
+            onAddFood={handleBowlClick}
+            foodAmount={globalFoodAmount}
+            queueSize={queueSize}
+            lastFedAmount={lastFedAmount}
+          />
         </div>
       </div>
 
