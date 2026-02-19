@@ -73,8 +73,8 @@ export async function POST(req: NextRequest) {
       Number(foodState.consumption_rate),
     );
 
-    // Add user's food contribution
-    const newFoodAmount = currentFood + count;
+    // Add user's food contribution and ENSURE IT'S AN INTEGER for bigint column
+    const newFoodAmount = Math.floor(currentFood + count);
 
     // Update global food state
     const { error: foodUpdateError } = await supabaseAdmin

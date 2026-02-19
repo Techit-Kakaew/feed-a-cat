@@ -38,7 +38,7 @@ export default function LeaderboardModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm rounded-2xl"
           />
 
           {/* Modal Content */}
@@ -125,9 +125,6 @@ export default function LeaderboardModal({
                       <div className="flex flex-col items-end">
                         <span className="font-mono font-black text-lg md:text-2xl text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-indigo-600">
                           {Number(country.score).toLocaleString()}
-                        </span>
-                        <span className="text-[8px] md:text-[10px] text-gray-400 uppercase font-black tracking-widest -mt-0.5 md:-mt-1">
-                          Food Units
                         </span>
                       </div>
                     </motion.div>

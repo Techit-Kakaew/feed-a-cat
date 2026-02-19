@@ -11,7 +11,7 @@ export default function LeaderboardTop5() {
   const { data: scores = [] } = useLeaderboard({ limit: 5 });
 
   return (
-    <div className="w-full max-w-md bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/20">
+    <div className="relative w-full max-w-md bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/20">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-black text-gray-800 tracking-tight flex items-center gap-2">
           <span className="text-2xl">🏆</span> TOP FEEDERS

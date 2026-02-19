@@ -17,6 +17,17 @@ const MESSAGES = {
     "SO HUNGRY...",
     "WHERE'S THE KIBBLE?",
     "MEOW? (FOOD?)",
+    "MY STOMACH IS EMPTY",
+    "PLEASE... JUST ONE BITE",
+    "DREAMING OF SALMON...",
+    "WANT TUNA TUESDAY",
+    "I'M WASTE AWAYING!",
+    "FEEDING TIME SOON?",
+    "PITY THE KITTEN...",
+    "LOST IN A FOOD-LESS WORLD",
+    "CAN YOU HEAR MY TUMMY?",
+    "BOWL IS TOO EMPTY",
+    "NEED... CALORIES...",
   ],
   EATING: [
     "MUNCH MUNCH!",
@@ -26,6 +37,17 @@ const MESSAGES = {
     "YUMMY!",
     "CRUNCHY BITES!",
     "PURR-FECT MEAL!",
+    "BEST KIBBLE EVER!",
+    "TASTES LIKE HEAVEN",
+    "I LOVE DINNER TIME",
+    "HAPPY TUMMY!",
+    "GLORIOUS FOOD!",
+    "CHOMP CHOMP...",
+    "I'M SO BLESSED!",
+    "CAN'T STOP EATING!",
+    "Mmm... SALTY!",
+    "CRUNCH CRUNCH CRUNCH",
+    "PURE HAPPINESS",
   ],
   REACTING: [
     "OH YES!",
@@ -35,6 +57,16 @@ const MESSAGES = {
     "THANK YOU!",
     "AWW YEAH!",
     "MEOWWW! (YES!)",
+    "YOU'RE SO KIND!",
+    "KIBBLES ARE COMING!",
+    "WIGGLE WIGGLE!",
+    "STOMACH EXCITEMENT!",
+    "I SEE THE SCOOP!",
+    "HEAVEN IS NEAR!",
+    "A TRUE HERO!",
+    "BLESS YOU, FEEDER!",
+    "CAN'T WAIT!",
+    "EXCITED MEATS!",
   ],
 };
 
@@ -72,10 +104,10 @@ export default function CatFeeder({ catState }: CatFeederProps) {
   }, [catState]);
 
   return (
-    <div className="relative flex flex-col items-center gap-8 md:gap-12 w-full max-w-2xl px-4">
-      <div className="relative w-full aspect-square max-w-md mx-auto group">
+    <div className="relative flex flex-col items-center gap-2 md:gap-12 w-full max-w-2xl px-2 md:px-4">
+      <div className="relative w-full aspect-square max-w-[240px] xs:max-w-[320px] md:max-w-md mx-auto group">
         {/* Video Container (Cat) */}
-        <div className="w-full h-full rounded-3xl overflow-hidden border-8 border-white shadow-[0_20px_60px_rgba(0,0,0,0.3)] bg-amber-50 relative">
+        <div className="w-full h-full rounded-3xl overflow-hidden border-4 md:border-8 border-white shadow-[0_20px_60px_rgba(0,0,0,0.3)] bg-amber-50 relative">
           {/* Internal Thought Bubble */}
           <AnimatePresence mode="wait">
             <motion.div
